@@ -1,0 +1,3 @@
+[submodule "third_party/Pytorch-Correlation-extension"]
+	path = third_party/Pytorch-Correlation-extension
+	url = https://github.com/ClementPinard/Pytorch-Correlation-extension.git
