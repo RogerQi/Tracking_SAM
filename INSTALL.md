@@ -27,7 +27,7 @@ pip install opencv-python Pillow tqdm matplotlib
 ### Compile PyTorch Correlation (for efficient VOS inference)
 
 ```bash
-cd third_party/Pytorch-Correlation-extension
+cd tracking_SAM/third_party/Pytorch-Correlation-extension
 python setup.py install
 ```
 

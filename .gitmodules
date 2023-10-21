@@ -1,6 +1,6 @@
 [submodule "third_party/Pytorch-Correlation-extension"]
-	path = third_party/Pytorch-Correlation-extension
+	path = tracking_SAM/third_party/Pytorch-Correlation-extension
 	url = https://github.com/ClementPinard/Pytorch-Correlation-extension.git
 [submodule "third_party/aot-benchmark"]
-	path = third_party/aot-benchmark
+	path = tracking_SAM/third_party/aot-benchmark
 	url = https://github.com/yoxu515/aot-benchmark
