@@ -9,4 +9,14 @@ Follow [MODEL_PREP.md](MODEL_PREP.md) to prepare pre-trained model weight.
 
 ## Run example
 
-TBD
+See all the iPython notebooks in the root project directory.
+
+## TODOs
+
+- [x] Add VOS
+- [] Add SAM
+- [] Add VOS+SAM
+- [] Add Clicking
+- [] Add Grounding DINO for languaged-conditioned mask generation
+- [] Serialize used models to ONNX for deployment (easy access and potential TRT optimization)
+- [] Switch to FastSAM for faster inference
