@@ -11,11 +11,10 @@ import matplotlib.pyplot as plt
 
 
 class Annotator(object):
-    def __init__(self, img_path, sam_predictor, save_path=None):
+    def __init__(self, img_np, sam_predictor, save_path=None):
         self.sam_predictor = sam_predictor
         self.save_path = save_path
-        self.file = Path(img_path).name
-        self.img = np.array(Image.open(img_path).convert('RGB'))
+        self.img = img_np.copy()
         self.sam_predictor.set_image(self.img)
         self.clicks = np.empty([0, 2], dtype=np.int64)
         self.pred = np.zeros(self.img.shape[:2], dtype=np.uint8)
@@ -86,11 +85,14 @@ class Annotator(object):
         self.fig = plt.figure('Annotator', figsize=(10, 7))
         self.fig.canvas.mpl_connect('key_press_event', self.__on_key_press)
         self.fig.canvas.mpl_connect("button_press_event", self.__on_button_press)
-        self.fig.suptitle('[RESET]: ctrl+r; [REVOKE]: ctrl+z; [EXIT]: esc; [DONE]: enter'.format(self.file), fontsize=16)
+        self.fig.suptitle('[RESET]: ctrl+r; [REVOKE]: ctrl+z; [EXIT]: esc; [DONE]: enter', fontsize=14)
         self.ax1 = self.fig.add_subplot(1, 1, 1)
         self.ax1.axis('off')
         self.ax1.imshow(self.merge)
         plt.show()
+    
+    def get_mask(self):
+        return self.pred
 
 if __name__ == "__main__":
     from segment_anything import sam_model_registry, SamPredictor
@@ -105,5 +107,9 @@ if __name__ == "__main__":
 
     predictor = SamPredictor(sam)
     img_path = "../sample_data/DAVIS_bear/images/00000.jpg"
-    anno = Annotator(img_path, predictor, save_path="/tmp/00000.png")
+    img_np = np.array(Image.open(img_path))
+    anno = Annotator(img_np, predictor, save_path="/tmp/00000.png")
     anno.main()
+
+    print("Done!")
+    print(anno.get_mask().shape)
