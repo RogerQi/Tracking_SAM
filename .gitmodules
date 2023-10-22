@@ -4,3 +4,6 @@
 [submodule "third_party/aot-benchmark"]
 	path = tracking_SAM/third_party/aot_benchmark
 	url = https://github.com/yoxu515/aot-benchmark
+[submodule "tracking_SAM/third_party/GroundingDINO"]
+	path = tracking_SAM/third_party/GroundingDINO
+	url = https://github.com/IDEA-Research/GroundingDINO

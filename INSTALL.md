@@ -36,3 +36,10 @@ python setup.py install
 ```bash
 pip install git+https://github.com/facebookresearch/segment-anything.git
 ```
+
+### Install GroundingDINO
+
+```
+cd tracking_SAM/third_party/GroundingDINO
+pip install .
+```
