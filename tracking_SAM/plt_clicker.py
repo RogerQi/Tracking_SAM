@@ -11,10 +11,12 @@ import matplotlib.pyplot as plt
 
 
 class Annotator(object):
-    def __init__(self, img_path, save_path=None):
-        # self.model, self.if_sis, self.if_cuda, self.save_path = model, if_sis, if_cuda, save_path
+    def __init__(self, img_path, sam_predictor, save_path=None):
+        self.sam_predictor = sam_predictor
+        self.save_path = save_path
         self.file = Path(img_path).name
-        self.img = np.array(Image.open(img_path))
+        self.img = np.array(Image.open(img_path).convert('RGB'))
+        self.sam_predictor.set_image(self.img)
         self.clicks = np.empty([0, 2], dtype=np.int64)
         self.pred = np.zeros(self.img.shape[:2], dtype=np.uint8)
         self.merge = self.__gene_merge(self.pred, self.img, self.clicks)
@@ -43,13 +45,14 @@ class Annotator(object):
         self.__update()
 
     def __predict(self):
-        # self.pred = predict(
-        #     self.model,
-        #     self.img,
-        #     self.clicks,
-        #     if_sis=self.if_sis,
-        #     if_cuda=self.if_cuda)
-        self.pred = np.zeros(self.img.shape[:2], dtype=np.uint8)
+        # TODO(roger): support multiple instances and negative clicks
+        input_label = np.ones((self.clicks.shape[0], ))
+        masks, scores, logits = self.sam_predictor.predict(
+            point_coords=self.clicks,
+            point_labels=input_label,
+            multimask_output=False,
+        )
+        self.pred = masks[0].astype(np.uint8)
         self.merge = self.__gene_merge(self.pred, self.img, self.clicks)
         self.__update()
 
@@ -73,8 +76,7 @@ class Annotator(object):
     def __on_button_press(self, event):
         if (event.xdata is None) or (event.ydata is None):
             return
-        if event.button == 1:
-            print(int(event.button))
+        if event.button == 1:  # 1 for left click; 3 for right click
             x, y = int(event.xdata + 0.5), int(event.ydata + 0.5)
             self.clicks = np.append(self.clicks, np.array(
                 [[x, y]], dtype=np.int64), axis=0)
@@ -91,6 +93,17 @@ class Annotator(object):
         plt.show()
 
 if __name__ == "__main__":
+    from segment_anything import sam_model_registry, SamPredictor
+    sam_checkpoint = "../pretrained_weights/sam_vit_h_4b8939.pth"  # default model
+
+    model_type = "vit_h"
+
+    device = "cuda"
+
+    sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+    sam.to(device=device)
+
+    predictor = SamPredictor(sam)
     img_path = "../sample_data/DAVIS_bear/images/00000.jpg"
-    anno = Annotator(img_path=img_path, save_path="/tmp/00000.png")
+    anno = Annotator(img_path, predictor, save_path="/tmp/00000.png")
     anno.main()
