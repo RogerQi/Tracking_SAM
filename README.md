@@ -14,7 +14,7 @@ See all the iPython notebooks in the root project directory.
 ## TODOs
 
 - [x] Add VOS
-- [] Add SAM
+- [x] Add SAM
 - [] Add VOS+SAM
 - [] Add Clicking
 - [] Add Grounding DINO for languaged-conditioned mask generation
