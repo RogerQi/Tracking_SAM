@@ -7,7 +7,7 @@ import argparse
 
 import tracking_SAM
 
-def main(sam_checkpoint, aot_checkpoint, play_delay):
+def main(sam_checkpoint, aot_checkpoint, grounding_dino_checkpoint, play_delay):
 
     test_data_base_dir = './sample_data/DAVIS_bear'
 
@@ -16,7 +16,7 @@ def main(sam_checkpoint, aot_checkpoint, play_delay):
 
     image_np_list = [np.array(Image.open(x)) for x in image_paths_list]
 
-    my_tracking_SAM = tracking_SAM.main_tracker(sam_checkpoint, aot_checkpoint)
+    my_tracking_SAM = tracking_SAM.main_tracker(sam_checkpoint, aot_checkpoint, grounding_dino_checkpoint)
 
     for i in range(len(image_np_list)):
         image_np_rgb = image_np_list[i]
@@ -48,6 +48,10 @@ def main(sam_checkpoint, aot_checkpoint, play_delay):
             if my_tracking_SAM.is_tracking():
                 my_tracking_SAM.reset_engine()
             my_tracking_SAM.annotate_init_frame(image_np_rgb)
+        elif key_pressed == ord('d'):
+            if my_tracking_SAM.is_tracking():
+                my_tracking_SAM.reset_engine()
+            my_tracking_SAM.annotate_init_frame(image_np_rgb, method='dino', category_name='bear')
     
     cv2.destroyAllWindows()
 
@@ -56,10 +60,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--sam_checkpoint', type=str, default="./pretrained_weights/sam_vit_h_4b8939.pth")
     parser.add_argument('--aot_checkpoint', type=str, default="./pretrained_weights/AOTT_PRE_YTB_DAV.pth")
+    parser.add_argument('--ground_dino_checkpoint', type=str, default="./pretrained_weights/groundingdino_swint_ogc.pth")
 
     # delay in ms for each image to stay on screen. Low values (e.g., 1) causes the video to pass by quickly.
     parser.add_argument('--play_delay', type=int, default=200)
 
     args = parser.parse_args()
 
-    main(args.sam_checkpoint, args.aot_checkpoint, args.play_delay)
+    main(args.sam_checkpoint, args.aot_checkpoint, args.ground_dino_checkpoint, args.play_delay)
