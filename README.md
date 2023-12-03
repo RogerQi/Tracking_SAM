@@ -32,6 +32,8 @@ See all the iPython notebooks in the root project directory.
 - [x] Add SAM
 - [x] Add VOS+SAM
 - [x] Add Clicking
-- [ ] Add Grounding DINO for languaged-conditioned mask generation
+- [x] Add Grounding DINO for languaged-conditioned mask generation
+- [ ] Support multiple objects
+- [ ] Save memory by loading models only when necessary and offloading when not used
 - [ ] Serialize used models to ONNX for deployment (easy access and potential TRT optimization)
 - [ ] Switch to FastSAM for faster inference
