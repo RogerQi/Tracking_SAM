@@ -29,7 +29,7 @@ pip install opencv-python Pillow tqdm matplotlib
 
 ```bash
 cd tracking_SAM/third_party/Pytorch-Correlation-extension
-python setup.py install
+pip install .
 ```
 
 ### Install SAM
