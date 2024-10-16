@@ -46,3 +46,16 @@ See all the iPython notebooks in the root project directory.
 - [ ] Save memory by loading models only when necessary and offloading when not used
 - [ ] Serialize used models to ONNX for deployment (easy access and potential TRT optimization)
 - [ ] Switch to FastSAM for faster inference
+
+## Citation
+
+If you find our tool useful in your research, please consider citing VBC (for which TrackingSAM was originally developed)
+
+```
+@article{liu2024visual,
+    title={Visual Whole-Body Control for Legged Loco-Manipulation},
+    author={Liu, Minghuan and Chen, Zixuan and Cheng, Xuxin and Ji, Yandong and Yang, Ruihan and Wang, Xiaolong},
+    journal={arXiv preprint arXiv:2403.16967},
+    year={2024}
+}
+```
