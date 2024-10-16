@@ -52,10 +52,10 @@ See all the iPython notebooks in the root project directory.
 If you find our tool useful in your research, please consider citing VBC (for which TrackingSAM was originally developed)
 
 ```
-@article{liu2024visual,
-    title={Visual Whole-Body Control for Legged Loco-Manipulation},
-    author={Liu, Minghuan and Chen, Zixuan and Cheng, Xuxin and Ji, Yandong and Yang, Ruihan and Wang, Xiaolong},
-    journal={arXiv preprint arXiv:2403.16967},
-    year={2024}
+@inproceedings{liu2024-vbc,
+  title={Visual Whole-Body Control for Legged Loco-Manipulation},
+  author={Liu, Minghuan and Chen, Zixuan and Cheng, Xuxin and Ji, Yandong and Qiu, Ri-Zhao and Yang, Ruihan and Wang, Xiaolong},
+  booktitle={CoRL},
+  year={2024}
 }
 ```
