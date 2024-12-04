@@ -46,6 +46,7 @@ See all the iPython notebooks in the root project directory.
 - [ ] Save memory by loading models only when necessary and offloading when not used
 - [ ] Serialize used models to ONNX for deployment (easy access and potential TRT optimization)
 - [ ] Switch to FastSAM for faster inference
+- [ ] Add support for SAM2
 
 ## Citation
 
