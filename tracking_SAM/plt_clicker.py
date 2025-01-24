@@ -7,9 +7,6 @@ from pathlib import Path
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-# Forbidden  Key: QSFKL
-
-
 class Annotator(object):
     def __init__(self, img_np, sam_predictor, save_path=None):
         self.sam_predictor = sam_predictor
