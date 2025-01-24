@@ -7,3 +7,6 @@
 [submodule "tracking_SAM/third_party/GroundingDINO"]
 	path = tracking_SAM/third_party/GroundingDINO
 	url = https://github.com/IDEA-Research/GroundingDINO
+[submodule "tracking_SAM/third_party/sam2"]
+	path = tracking_SAM/third_party/sam2
+	url = https://github.com/facebookresearch/sam2
