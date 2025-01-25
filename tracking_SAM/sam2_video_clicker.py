@@ -19,9 +19,7 @@ class Annotator(object):
         self.sam_predictor = sam_predictor
         self.video_folder_path = video_folder_path
         # Initialize
-        self.inference_state = self.sam_predictor.init_state(video_path=video_folder_path)
-
-        self.sam_predictor.reset_state(self.inference_state)
+        self.reset_inference_state()
 
         first_img_path = os.path.join(video_folder_path, sorted(os.listdir(video_folder_path))[0])
         img_np = np.array(Image.open(first_img_path).convert('RGB'))
@@ -48,6 +46,10 @@ class Annotator(object):
                 # bright outer ring
                 cv2.circle(result, tuple(pt), r, (255, 255, 255), cb)
         return result
+
+    def reset_inference_state(self):
+        self.inference_state = self.sam_predictor.init_state(video_path=self.video_folder_path)
+        self.sam_predictor.reset_state(self.inference_state)
 
     def __reset_annotator_state(self):
         self.click_label_dict = {}
