@@ -30,11 +30,11 @@ while True:
         break
     video_frames.append(frame)
 
+mask_frames = {}
+
 MID_IDX = 50
 
 with tempfile.TemporaryDirectory() as temp_folder:
-    os.makedirs(temp_folder, exist_ok=True)
-
     for idx, frame in enumerate(video_frames):
         if idx < MID_IDX:
             continue
@@ -52,21 +52,54 @@ with tempfile.TemporaryDirectory() as temp_folder:
             for i, out_obj_id in enumerate(out_obj_ids)
         }
     
-    mask_frames = {}
     for frame_idx in sorted(video_segments.keys()):
         mask_np = np.zeros((video_frames[frame_idx].shape[0], video_frames[frame_idx].shape[1]), dtype=bool)
         for obj_idx in video_segments[frame_idx]:
             mask_np |= video_segments[frame_idx][obj_idx]
         mask_frames[frame_idx + MID_IDX] = mask_np
     
-    # Write to video
-    out_video_path = "/home/roger/annotate_video_out.mp4"
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(out_video_path, fourcc, 30, (video_frames[0].shape[1], video_frames[0].shape[0]))
-    for idx in range(len(video_frames)):
-        img_bgr_np = video_frames[idx]
-        if idx in mask_frames:
-            mask_frame = mask_frames[idx]
-            img_bgr_np[mask_frame] = 0
-        out.write(img_bgr_np)
-    out.release()
+# Reverse
+with tempfile.TemporaryDirectory() as temp_folder:
+    for idx in range(MID_IDX + 1):
+        indexing_idx = MID_IDX - idx
+        frame = video_frames[indexing_idx]
+        fname = "{}.jpg".format(str(idx).zfill(8))
+        cv2.imwrite(os.path.join(temp_folder, fname), frame)
+
+    anno.video_folder_path = temp_folder
+    anno.reset_inference_state()
+
+    for obj_idx in anno.click_label_dict:
+        _, out_obj_ids, out_mask_logits = anno.sam_predictor.add_new_points_or_box(
+            inference_state=anno.inference_state,
+            frame_idx=0,  # the frame index we interact with
+            obj_id=obj_idx, # give a unique id to each object we interact with (it can be any integers)
+            points=anno.click_label_dict[obj_idx]["clicks"],
+            labels=anno.click_label_dict[obj_idx]["labels"],
+        )
+
+    video_segments = {}  # video_segments contains the per-frame segmentation results
+    for out_frame_idx, out_obj_ids, out_mask_logits in sam2_predictor.propagate_in_video(anno.inference_state):
+        video_segments[out_frame_idx] = {
+            out_obj_id: (out_mask_logits[i] > 0.0).cpu().numpy()[0]
+            for i, out_obj_id in enumerate(out_obj_ids)
+        }
+    
+    for frame_idx in sorted(video_segments.keys()):
+        real_idx = MID_IDX - frame_idx
+        mask_np = np.zeros((video_frames[frame_idx].shape[0], video_frames[frame_idx].shape[1]), dtype=bool)
+        for obj_idx in video_segments[frame_idx]:
+            mask_np |= video_segments[frame_idx][obj_idx]
+        mask_frames[real_idx] = mask_np
+    
+# Write to video
+out_video_path = "/home/roger/annotate_video_out.mp4"
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter(out_video_path, fourcc, 30, (video_frames[0].shape[1], video_frames[0].shape[0]))
+for idx in range(len(video_frames)):
+    img_bgr_np = video_frames[idx]
+    if idx in mask_frames:
+        mask_frame = mask_frames[idx]
+        img_bgr_np[mask_frame] = 0
+    out.write(img_bgr_np)
+out.release()
